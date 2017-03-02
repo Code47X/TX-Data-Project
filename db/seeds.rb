@@ -19,7 +19,7 @@ csv.each do |row|
   c.rape_revised_definition              = row["rape (revised definition)"]
   c.rape_legacy_definition               = row["rape (legacy definition)"]
   c.robbery                              = row["robbery"]
-  c.aggravated_assault                   = row["aggravated_assault"]
+  c.aggravated_assault                   = row["aggravated assault"]
   c.property_crime                       = row["property crime"]
   c.burglary                             = row["burglary"]
   c.larceny_theft                        = row["larceny-theft"]

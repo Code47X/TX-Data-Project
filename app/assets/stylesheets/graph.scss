@@ -1,0 +1,14 @@
+// Place all the styles related to the Graph controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body {
+  // background-color: grey;
+  background-image: url(map.gif);
+  background-repeat: no-repeat;
+  background-size: 660px 660px;
+}
+
+circle {
+  fill: rgba(255, 0, 0, 0.5);
+}
