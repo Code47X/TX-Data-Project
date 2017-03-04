@@ -68,8 +68,8 @@ function renderTexasSP(data) {
     .attr("cy",    function (d){ return yScale(d[yColumn]); })
     .attr("r",     function (d){ return rScale(d[rColumn]); })
     .attr("class", function (d){ return d.city })
-  .on('mouseover', function(d){
-    renderCityBC(data, d["id"]);
+  .on('mouseover', function(d, i){
+    renderCityBC(data, i);
   })
   .on('mouseout', function(d) {
     d3.selectAll(".cityBC").remove();
@@ -110,7 +110,7 @@ function renderCityBC(data, cityIndex) {
   domainKeyNames.pop()
 
   xScale.domain(domainKeyNames);
-  yScale.domain([0, 500]);
+  yScale.domain([0, 7000]);
 
   domainKeyNames.forEach(function(keyName, index) {
     g.append("rect")
