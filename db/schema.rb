@@ -10,29 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170301230302) do
+ActiveRecord::Schema.define(version: 20170304020656) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "cities", force: :cascade do |t|
-    t.string   "city"
-    t.integer  "population"
-    t.integer  "violent_crime"
-    t.integer  "murder_and_nonnegligent_manslaughter"
-    t.integer  "rape_revised_definition"
-    t.integer  "rape_legacy_definition"
-    t.integer  "robbery"
-    t.integer  "aggravated_assault"
-    t.integer  "property_crime"
-    t.integer  "burglary"
-    t.integer  "larceny_theft"
-    t.integer  "motor_vehicle_theft"
-    t.integer  "arson"
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
-    t.float    "latitude"
-    t.float    "longitude"
+    t.string  "city"
+    t.integer "population"
+    t.integer "violent_crime"
+    t.integer "murder_and_nonnegligent_manslaughter"
+    t.integer "rape_revised_definition"
+    t.integer "rape_legacy_definition"
+    t.integer "robbery"
+    t.integer "aggravated_assault"
+    t.integer "property_crime"
+    t.integer "burglary"
+    t.integer "larceny_theft"
+    t.integer "motor_vehicle_theft"
+    t.integer "arson"
+    t.float   "latitude"
+    t.float   "longitude"
   end
 
 end
