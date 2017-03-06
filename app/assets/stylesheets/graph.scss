@@ -12,3 +12,11 @@ body {
 circle {
   fill: rgba(255, 0, 0, 0.2);
 }
+
+.currentCity {
+  display: inline;
+}
+
+.otherCity {
+  display: none;
+}

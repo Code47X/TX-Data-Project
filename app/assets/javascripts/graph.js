@@ -132,7 +132,10 @@ function renderCityBC(data, cityName) {
   data = data.slice(minIndex, maxIndex);
   xScale.domain( data.map( function (d){ return d[xColumn]; }));
 
-  xAxisG.call(xAxis);
+  xAxisG.call(xAxis)
+    .selectAll("text")
+      .attr("id", function (d){ return d })
+      .attr("class", function (d) { if(d == cityName) {return "currentCity"} else {return "otherCity"} });
   yAxisG.call(yAxis);
 
   var bars = g.selectAll("rect").data(data);
