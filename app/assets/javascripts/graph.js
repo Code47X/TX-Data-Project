@@ -135,8 +135,8 @@ function renderCityBC(data, cityName) {
 
   xAxisG.call(xAxis)
     .selectAll("text")
-      .attr("id", function(d, i) {return  "c" + i})
-      .attr("class", function (d) { console.log(d); if(d == cityName) {return "currentCity"} else {return "otherCity"} });
+      .attr("id", function(d, i) { return  "c" + i })
+      .attr("class", function (d) { if(d == cityName) {return "currentCity"} else {return "otherCity"} });
   yAxisG.call(yAxis);
 
   var bars = g.selectAll("rect").data(data);
