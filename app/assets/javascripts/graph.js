@@ -17,7 +17,7 @@ $.ajax({
 // Main render function                                                      //
 ///////////////////////////////////////////////////////////////////////////////
 function render(data) {
-  console.log(data);
+  // console.log(data);
 
   renderTexasSP(data);
 }
@@ -68,11 +68,8 @@ function renderTexasSP(data) {
     .attr("cy",    function (d){ return yScale(d[yColumn]); })
     .attr("r",     function (d){ return rScale(d[rColumn]); })
     .attr("class", function (d){ return d.city })
-  .on('mouseover', function(d, i){
-    renderCityBC(data, i);
-  })
-  .on('mouseout', function(d) {
-    d3.selectAll(".cityBC").remove();
+  .on('mouseover', function(d){
+    renderCityBC(data, d.city);
   })
 
   circles.exit().remove();
@@ -81,42 +78,78 @@ function renderTexasSP(data) {
 ///////////////////////////////////////////////////////////////////////////////
 // Renders the city crime bar chart                                          //
 ///////////////////////////////////////////////////////////////////////////////
-function renderCityBC(data, cityIndex) {
-  var outerWidth  = 500;
+function renderCityBC(data, cityName) {
+  // Delete the old canvas
+  d3.selectAll(".cityBC").remove();
+
+  var outerWidth = 700;
   var outerHeight = 250;
-  var margin = { left: 5, top: 5, right: 0, bottom: 0 };
+  var margin = { left: 90, top: 30, right: 30, bottom: 30 };
   var barPadding = 0.2;
+
+  var xColumn = "city";
+  var yColumn = "burglary";
+
+  var selectedCityColor = "red";
+  var extraCityColor    = "blue";
 
   var innerWidth  = outerWidth  - margin.left - margin.right;
   var innerHeight = outerHeight - margin.top  - margin.bottom;
 
   var svg = d3.select("body").append("svg")
+    .attr("class", "cityBC")
     .attr("width",  outerWidth)
-    .attr("height", outerHeight)
-    .attr("class", "cityBC");
+    .attr("height", outerHeight);
 
   var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+  var xAxisG = g.append("g")
+    .attr("class", "xAxis")
+    .attr("transform", "translate(0," + innerHeight + ")");
+  var yAxisG = g.append("g")
+    .attr("class", "yAxis");
+
   var xScale = d3.scale.ordinal().rangeBands([0, innerWidth], barPadding);
   var yScale = d3.scale.linear().range([innerHeight, 0]);
 
-  // Theres got to be a better way...
-  domainKeyNames = Object.keys(data[cityIndex]);
-  domainKeyNames.shift() // These lines remove "id", "city", and "population" keys from the domain array
-  domainKeyNames.shift()
-  domainKeyNames.shift()
-  domainKeyNames.pop()   // These lines remove "latitude" and "longitude" keys from the domain array
-  domainKeyNames.pop()
+  var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
+  var yAxis = d3.svg.axis().scale(yScale).orient("left");
 
-  xScale.domain(domainKeyNames);
-  yScale.domain([0, 7000]);
 
-  domainKeyNames.forEach(function(keyName, index) {
-    g.append("rect")
-      .attr("x", xScale(keyName))
-      .attr("y", yScale(data[cityIndex][keyName]))
-      .attr("width", xScale.rangeBand())
-      .attr("height", yScale(innerHeight - data[cityIndex][keyName]));
-  })
+  // Sort the data
+  data = data.sort(function(a, b){ return a[yColumn] / a.population - b[yColumn] / b.population})
+  cityIndex = data.findIndex(x => x.city == cityName);
+
+  yScale.domain([0, d3.max(data, function (d){ return d[yColumn] / d.population; })]);
+
+  // Get the data just before and after the selected city
+  minIndex = cityIndex - 15;
+  maxIndex = cityIndex + 15;
+  if (minIndex < 0)           { minIndex = 0; }
+  if (maxIndex > data.length) { maxIndex = data.length; }
+
+  data = data.slice(minIndex, maxIndex);
+  xScale.domain( data.map( function (d){ return d[xColumn]; }));
+
+  xAxisG.call(xAxis);
+  yAxisG.call(yAxis);
+
+  var bars = g.selectAll("rect").data(data);
+
+  // Enter
+  bars.enter().append("rect")
+    .attr("width", xScale.rangeBand());
+
+  // Update
+  bars
+    .attr("x",      function (d){ return xScale(d[xColumn]); })
+    .attr("y",      function (d){ return yScale(d[yColumn] / d.population); })
+    .attr("height", function (d){ return innerHeight - yScale(d[yColumn] / d.population); })
+    .attr("fill",   function (d){ if (d.city == cityName) {return selectedCityColor} else {return extraCityColor}});
+
+  // Exit
+  bars.exit().remove();
 }
+
+
