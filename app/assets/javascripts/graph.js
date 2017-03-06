@@ -86,6 +86,7 @@ function renderCityBC(data, cityName) {
   var outerHeight = 250;
   var margin = { left: 90, top: 30, right: 30, bottom: 30 };
   var barPadding = 0.2;
+  var textFadeDuration = 300;
 
   var xColumn = "city";
   var yColumn = "burglary";
@@ -111,7 +112,7 @@ function renderCityBC(data, cityName) {
     .attr("class", "yAxis");
 
   var xScale = d3.scale.ordinal().rangeBands([0, innerWidth], barPadding);
-  var yScale = d3.scale.linear().range([innerHeight, 0]);
+  var yScale = d3.scale.linear().range([innerHeight, 5]);
 
   var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
   var yAxis = d3.svg.axis().scale(yScale).orient("left");
@@ -134,8 +135,8 @@ function renderCityBC(data, cityName) {
 
   xAxisG.call(xAxis)
     .selectAll("text")
-      .attr("id", function (d){ return d })
-      .attr("class", function (d) { if(d == cityName) {return "currentCity"} else {return "otherCity"} });
+      .attr("id", function(d, i) {return  "c" + i})
+      .attr("class", function (d) { console.log(d); if(d == cityName) {return "currentCity"} else {return "otherCity"} });
   yAxisG.call(yAxis);
 
   var bars = g.selectAll("rect").data(data);
@@ -149,7 +150,24 @@ function renderCityBC(data, cityName) {
     .attr("x",      function (d){ return xScale(d[xColumn]); })
     .attr("y",      function (d){ return yScale(d[yColumn] / d.population); })
     .attr("height", function (d){ return innerHeight - yScale(d[yColumn] / d.population); })
-    .attr("fill",   function (d){ if (d.city == cityName) {return selectedCityColor} else {return extraCityColor}});
+    .attr("fill",   function (d){ if (d.city == cityName) {return selectedCityColor} else {return extraCityColor}})
+  .on("mouseover", function(d, i){
+    d3.select(".currentCity").transition()
+      .duration(textFadeDuration)
+      .style("opacity", 0)
+    d3.select('#c' + i)
+      .transition()
+        .duration(textFadeDuration)
+        .style("opacity", 1)
+  })
+  .on("mouseout", function(d, i) {
+    d3.select("#c" + i).transition()
+      .duration(textFadeDuration)
+      .style("opacity", 0)
+    d3.select(".currentCity").transition()
+      .duration(textFadeDuration)
+      .style("opacity", 1)
+  })
 
   // Exit
   bars.exit().remove();
