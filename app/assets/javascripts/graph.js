@@ -83,7 +83,7 @@ function renderCityBC(data, cityName) {
   d3.selectAll(".cityBC").remove();
 
   var outerWidth = 700;
-  var outerHeight = 250;
+  var outerHeight = 550;
   var margin = { left: 90, top: 30, right: 30, bottom: 30 };
   var barPadding = 0.2;
   var textFadeDuration = 300;
@@ -125,8 +125,8 @@ function renderCityBC(data, cityName) {
   yScale.domain([0, d3.max(data, function (d){ return d[yColumn] / d.population; })]);
 
   // Get the data just before and after the selected city
-  minIndex = cityIndex - 15;
-  maxIndex = cityIndex + 15;
+  minIndex = cityIndex - 25;
+  maxIndex = cityIndex + 25;
   if (minIndex < 0)           { minIndex = 0; }
   if (maxIndex > data.length) { maxIndex = data.length; }
 
@@ -148,8 +148,8 @@ function renderCityBC(data, cityName) {
   // Update
   bars
     .attr("x",      function (d){ return xScale(d[xColumn]); })
-    .attr("y",      function (d){ return yScale(d[yColumn] / d.population); })
-    .attr("height", function (d){ return innerHeight - yScale(d[yColumn] / d.population); })
+    .attr("y",      innerHeight)
+    .attr("height", 0)
     .attr("fill",   function (d){ if (d.city == cityName) {return selectedCityColor} else {return extraCityColor}})
   .on("mouseover", function(d, i){
     d3.select(".currentCity").transition()
@@ -168,6 +168,11 @@ function renderCityBC(data, cityName) {
       .duration(textFadeDuration)
       .style("opacity", 1)
   })
+  .transition()
+    .duration(500)
+    .attr("height", function (d){ return innerHeight - yScale(d[yColumn] / d.population); })
+    .attr("y", function (d){ return yScale(d[yColumn] / d.population); })
+    .delay(function (d,i) {return i * 25});
 
   // Exit
   bars.exit().remove();
