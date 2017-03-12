@@ -38,7 +38,7 @@ function renderTexasSP(data) {
   var innerWidth  = outerWidth  - margin.left - margin.right;
   var innerHeight = outerHeight - margin.top  - margin.bottom;
 
-  var svg = d3.select("body").append("svg")
+  var svg = d3.select(".texas-graph").append("svg")
     .attr("width",  outerWidth)
     .attr("height", outerHeight);
 
@@ -82,14 +82,14 @@ function renderCityBC(data, cityName) {
   // Delete the old canvas
   d3.selectAll(".cityBC").remove();
 
-  var outerWidth = 700;
-  var outerHeight = 550;
+  var outerWidth = 1080;
+  var outerHeight = 150;
   var margin = { left: 90, top: 30, right: 30, bottom: 30 };
   var barPadding = 0.2;
   var textFadeDuration = 300;
 
   var xColumn = "city";
-  var yColumn = "burglary";
+  var yColumn = "violent_crime";
 
   var selectedCityColor = "red";
   var extraCityColor    = "blue";
@@ -97,7 +97,7 @@ function renderCityBC(data, cityName) {
   var innerWidth  = outerWidth  - margin.left - margin.right;
   var innerHeight = outerHeight - margin.top  - margin.bottom;
 
-  var svg = d3.select("body").append("svg")
+  var svg = d3.select(".city-comparision").append("svg")
     .attr("class", "cityBC")
     .attr("width",  outerWidth)
     .attr("height", outerHeight);
@@ -125,8 +125,8 @@ function renderCityBC(data, cityName) {
   yScale.domain([0, d3.max(data, function (d){ return d[yColumn] / d.population; })]);
 
   // Get the data just before and after the selected city
-  minIndex = cityIndex - 25;
-  maxIndex = cityIndex + 25;
+  minIndex = cityIndex - 50;
+  maxIndex = cityIndex + 50;
   if (minIndex < 0)           { minIndex = 0; }
   if (maxIndex > data.length) { maxIndex = data.length; }
 
@@ -172,7 +172,7 @@ function renderCityBC(data, cityName) {
     .duration(500)
     .attr("height", function (d){ return innerHeight - yScale(d[yColumn] / d.population); })
     .attr("y", function (d){ return yScale(d[yColumn] / d.population); })
-    .delay(function (d,i) {return i * 25});
+    .delay(function (d,i) {return i * 10});
 
   // Exit
   bars.exit().remove();
