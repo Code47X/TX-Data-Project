@@ -28,7 +28,7 @@ function render(data) {
 function renderTexasSP(data) {
   var outerWidth  = 642;
   var outerHeight = 649;
-  var margin = { left: 5, top: 5, right: 0, bottom: 0 };
+  var margin = { left: 9, top: 5, right: 0, bottom: 0 };
 
   var xColumn = "longitude";
   var yColumn = "latitude";
@@ -67,7 +67,6 @@ function renderTexasSP(data) {
     .attr("cx",    function (d){ return xScale(d[xColumn]); })
     .attr("cy",    function (d){ return yScale(d[yColumn]); })
     .attr("r",     function (d){ return rScale(d[rColumn]); })
-    .attr("class", function (d){ return d.city })
   .on('mouseover', function(d){
     renderCityBC(data, d.city);
   })
